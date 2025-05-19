@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой Еженедельный Планер</title>
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #4fc3f7;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+        
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            gap: 5px;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background-color: var(--light);
+            border: none;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn:hover {
+            background-color: #e9ecef;
+        }
+        
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 25px;
+            background-color: white;
+            border-radius: 0 8px 8px 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .schedule {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        .schedule th {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .schedule td {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .schedule tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .schedule tr:hover {
+            background-color: #e9f5ff;
+        }
+        
+        .time-col {
+            width: 15%;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+        
+        .activity-col {
+            width: 70%;
+        }
+        
+        .notes-col {
+            width: 15%;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .badge-work {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-personal {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-family {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .badge-health {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .badge-food {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        
+        .day-section {
+            margin-bottom: 30px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .day-section h3 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+        
+        .exercise-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .exercise-list li {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .exercise-link {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .exercise-link:hover {
+            text-decoration: underline;
+        }
+        
+        .recipe-link {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .recipe-link:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                border-radius: 5px;
+                margin-bottom: 5px;
+            }
+            
+            .schedule {
+                font-size: 0.9rem;
+            }
+            
+            .time-col, .notes-col {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Мой Еженедельный Планер</h1>
+            <p>Оптимизированный график для продуктивности и баланса</p>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'schedule')">Расписание</button>
+            <button class="tab-btn" onclick="openTab(event, 'nutrition')">Питание</button>
+            <button class="tab-btn" onclick="openTab(event, 'workouts')">Тренировки</button>
+        </div>
+        
+        <!-- Основное расписание -->
+        <div id="schedule" class="tab-content active">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openSubTab(event, 'monday')">Понедельник</button>
+                <button class="tab-btn" onclick="openSubTab(event, 'tuesday')">Вторник</button>
+                <button class="tab-btn" onclick="openSubTab(event, 'wednesday')">Среда</button>
+                <button class="tab-btn" onclick="openSubTab(event, 'thursday')">Четверг</button>
+                <button class="tab-btn" onclick="openSubTab(event, 'friday')">Пятница</button>
+                <button class="tab-btn" onclick="openSubTab(event, 'saturday')">Суббота</button>
+                <button class="tab-btn" onclick="openSubTab(event, 'sunday')">Воскресенье</button>
+            </div>
+            
+            <!-- Понедельник -->
+            <div id="monday" class="tab-content active">
+                <h2>Понедельник <span class="badge badge-work">Рабочий день</span></h2>
+                
+                <div class="day-section">
+                    <h3>📅 График дня</h3>
+                    <table class="schedule">
+                        <tr>
+                            <th>Время</th>
+                            <th>Активность</th>
+                            <th>Примечания</th>
+                        </tr>
+                        <tr>
+                            <td class="time-col">05:30</td>
+                            <td class="activity-col">Подъем</td>
+                            <td class="notes-col"></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">05:40-06:00</td>
+                            <td class="activity-col">Зарядка + завтрак (омлет/каша)</td>
+                            <td class="notes-col"><span class="badge badge-health">Здоровье</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">06:09-07:10</td>
+                            <td class="activity-col">Поезд в Брест: чтение или аудиоанглийский</td>
+                            <td class="notes-col"><span class="badge badge-personal">Развитие</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">07:20-15:50</td>
+                            <td class="activity-col">Работа в институте</td>
+                            <td class="notes-col"><span class="badge badge-work">Работа</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">16:06-17:10</td>
+                            <td class="activity-col">Поезд в Кобрин: отдых/аудиокнига</td>
+                            <td class="notes-col"><span class="badge badge-personal">Отдых</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">17:30-18:30</td>
+                            <td class="activity-col">Приготовление еды на 2-3 дня</td>
+                            <td class="notes-col"><span class="badge badge-food">Питание</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">18:30-20:00</td>
+                            <td class="activity-col">Сауна (аквапарк)</td>
+                            <td class="notes-col"><span class="badge badge-health">Восстановление</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">20:00-21:00</td>
+                            <td class="activity-col">Свободное время (фильм/хобби)</td>
+                            <td class="notes-col"><span class="badge badge-personal">Отдых</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">22:30</td>
+                            <td class="activity-col">Сон</td>
+                            <td class="notes-col"></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="day-section">
+                    <h3>🍽 Питание сегодня</h3>
+                    <p><strong>Курица + Гречка + Овощи</strong></p>
+                    <p>Примерное меню:</p>
+                    <ul>
+                        <li>Завтрак: Омлет/каша</li>
+                        <li>Обед: Курица с гречкой и тушеными овощами</li>
+                        <li>Ужин: Творог с чаем</li>
+                    </ul>
+                </div>
+                
+                <div class="day-section">
+                    <h3>👨‍🍳 Приготовление</h3>
+                    <p><strong>Сегодня нужно приготовить:</strong> Курица + Гречка + Овощи на 2-3 дня</p>
+                    <p><a href="#recipe-chicken" class="recipe-link">Рецепт курицы с гречкой и овощами</a></p>
+                    <p><strong>Список продуктов:</strong></p>
+                    <ul>
+                        <li>Куриные окорочка - 2 кг</li>
+                        <li>Гречка - 1 кг</li>
+                        <li>Капуста белокочанная - 1 кг</li>
+                        <li>Морковь - 0,5 кг</li>
+                        <li>Лук репчатый - 0,5 кг</li>
+                    </ul>
+                </div>
+                
+                <div class="day-section">
+                    <h3>💪 Тренировка</h3>
+                    <p><strong>Сегодня:</strong> Сауна (восстановление)</p>
+                    <p>Отдых - важная часть тренировочного процесса!</p>
+                </div>
+            </div>
+            
+            <!-- Вторник -->
+            <div id="tuesday" class="tab-content">
+                <h2>Вторник <span class="badge badge-work">Рабочий день</span></h2>
+                
+                <div class="day-section">
+                    <h3>📅 График дня</h3>
+                    <table class="schedule">
+                        <tr>
+                            <th>Время</th>
+                            <th>Активность</th>
+                            <th>Примечания</th>
+                        </tr>
+                        <tr>
+                            <td class="time-col">05:30</td>
+                            <td class="activity-col">Подъем</td>
+                            <td class="notes-col"></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">05:40-06:00</td>
+                            <td class="activity-col">Зарядка + завтрак</td>
+                            <td class="notes-col"><span class="badge badge-health">Здоровье</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">06:09-07:10</td>
+                            <td class="activity-col">Поезд в Брест: чтение или аудиоанглийский</td>
+                            <td class="notes-col"><span class="badge badge-personal">Развитие</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">07:20-15:50</td>
+                            <td class="activity-col">Работа в институте</td>
+                            <td class="notes-col"><span class="badge badge-work">Работа</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">16:06-17:10</td>
+                            <td class="activity-col">Поезд в Кобрин: отдых/аудиокнига</td>
+                            <td class="notes-col"><span class="badge badge-personal">Отдых</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">17:30-18:00</td>
+                            <td class="activity-col">Ужин</td>
+                            <td class="notes-col"><span class="badge badge-food">Питание</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">18:00-19:30</td>
+                            <td class="activity-col">Свободное время (отдых/хобби)</td>
+                            <td class="notes-col"><span class="badge badge-personal">Отдых</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">19:30-20:15</td>
+                            <td class="activity-col">Домашняя тренировка</td>
+                            <td class="notes-col"><span class="badge badge-health">Фитнес</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">20:15-21:30</td>
+                            <td class="activity-col">Фриланс (1 час) или английский</td>
+                            <td class="notes-col"><span class="badge badge-work">Фриланс</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">22:30</td>
+                            <td class="activity-col">Сон</td>
+                            <td class="notes-col"></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="day-section">
+                    <h3>🍽 Питание сегодня</h3>
+                    <p><strong>Курица + Гречка + Овощи</strong></p>
+                    <p>Примерное меню:</p>
+                    <ul>
+                        <li>Завтрак: Омлет/каша</li>
+                        <li>Обед: Курица с гречкой и тушеными овощами</li>
+                        <li>Ужин: Творог с чаем</li>
+                    </ul>
+                </div>
+                
+                <div class="day-section">
+                    <h3>💪 Тренировка</h3>
+                    <p><strong>Грудь + Трицепс + Кардио</strong></p>
+                    <ol class="exercise-list">
+                        <li>Разминка: <a href="https://bodybuilding-and-fitness.ru/kardio/skakalka.html" class="exercise-link" target="_blank">Скакалка – 5 мин</a></li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/otzhimaniya-na-brusyah.html" class="exercise-link" target="_blank">Отжимания на брусьях</a> – 3х10</li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/zhim-gantelej-lezha.html" class="exercise-link" target="_blank">Жим гантелей лёжа</a> – 3х12</li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/otzhimaniya-ot-pola.html" class="exercise-link" target="_blank">Отжимания от пола</a> – 3х15</li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/francuzskij-zhim.html" class="exercise-link" target="_blank">Французский жим (гантели)</a> – 3х10</li>
+                        <li>Кардио: <a href="https://bodybuilding-and-fitness.ru/kardio/skakalka.html" class="exercise-link" target="_blank">Скакалка</a> – 3 раунда по 1 мин</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <!-- Среда -->
+            <div id="wednesday" class="tab-content">
+                <h2>Среда <span class="badge badge-work">Рабочий день</span></h2>
+                
+                <div class="day-section">
+                    <h3>📅 График дня</h3>
+                    <table class="schedule">
+                        <tr>
+                            <th>Время</th>
+                            <th>Активность</th>
+                            <th>Примечания</th>
+                        </tr>
+                        <tr>
+                            <td class="time-col">05:30</td>
+                            <td class="activity-col">Подъем</td>
+                            <td class="notes-col"></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">05:40-06:00</td>
+                            <td class="activity-col">Зарядка + завтрак</td>
+                            <td class="notes-col"><span class="badge badge-health">Здоровье</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">06:09-07:10</td>
+                            <td class="activity-col">Поезд в Брест: чтение или аудиоанглийский</td>
+                            <td class="notes-col"><span class="badge badge-personal">Развитие</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">07:20-15:50</td>
+                            <td class="activity-col">Работа в институте</td>
+                            <td class="notes-col"><span class="badge badge-work">Работа</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">16:06-17:10</td>
+                            <td class="activity-col">Поезд в Кобрин: отдых/аудиокнига</td>
+                            <td class="notes-col"><span class="badge badge-personal">Отдых</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">17:30-18:00</td>
+                            <td class="activity-col">Ужин</td>
+                            <td class="notes-col"><span class="badge badge-food">Питание</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">18:00-19:30</td>
+                            <td class="activity-col">Свободное время (отдых/хобби)</td>
+                            <td class="notes-col"><span class="badge badge-personal">Отдых</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">19:30-20:15</td>
+                            <td class="activity-col">Домашняя тренировка</td>
+                            <td class="notes-col"><span class="badge badge-health">Фитнес</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">20:15-21:30</td>
+                            <td class="activity-col">Фриланс (1 час) или английский</td>
+                            <td class="notes-col"><span class="badge badge-work">Фриланс</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">22:30</td>
+                            <td class="activity-col">Сон</td>
+                            <td class="notes-col"></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="day-section">
+                    <h3>🍽 Питание сегодня</h3>
+                    <p><strong>Курица + Гречка + Овощи</strong></p>
+                    <p>Примерное меню:</p>
+                    <ul>
+                        <li>Завтрак: Омлет/каша</li>
+                        <li>Обед: Курица с гречкой и тушеными овощами</li>
+                        <li>Ужин: Творог с чаем</li>
+                    </ul>
+                </div>
+                
+                <div class="day-section">
+                    <h3>💪 Тренировка</h3>
+                    <p><strong>Спина + Бицепс</strong></p>
+                    <ol class="exercise-list">
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/podtyagivaniya.html" class="exercise-link" target="_blank">Подтягивания на турнике</a> – 3х8</li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/tyaga-ganteli-v-naklone.html" class="exercise-link" target="_blank">Тяга гантели к поясу</a> – 3х10</li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/shragi.html" class="exercise-link" target="_blank">Шраги (гантели)</a> – 3х12</li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/podem-gantelej-na-biceps.html" class="exercise-link" target="_blank">Подъём гантелей на бицепс</a> – 3х10</li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/planka.html" class="exercise-link" target="_blank">Планка</a> – 3 подхода по 30 сек</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <!-- Четверг -->
+            <div id="thursday" class="tab-content">
+                <h2>Четверг <span class="badge badge-work">Рабочий день</span></h2>
+                
+                <div class="day-section">
+                    <h3>📅 График дня</h3>
+                    <table class="schedule">
+                        <tr>
+                            <th>Время</th>
+                            <th>Активность</th>
+                            <th>Примечания</th>
+                        </tr>
+                        <tr>
+                            <td class="time-col">05:30</td>
+                            <td class="activity-col">Подъем</td>
+                            <td class="notes-col"></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">05:40-06:00</td>
+                            <td class="activity-col">Зарядка + завтрак</td>
+                            <td class="notes-col"><span class="badge badge-health">Здоровье</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">06:09-07:10</td>
+                            <td class="activity-col">Поезд в Брест: чтение или аудиоанглийский</td>
+                            <td class="notes-col"><span class="badge badge-personal">Развитие</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">07:20-15:50</td>
+                            <td class="activity-col">Работа в институте</td>
+                            <td class="notes-col"><span class="badge badge-work">Работа</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">16:06-17:10</td>
+                            <td class="activity-col">Поезд в Кобрин: отдых/аудиокнига</td>
+                            <td class="notes-col"><span class="badge badge-personal">Отдых</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">17:30-18:00</td>
+                            <td class="activity-col">Ужин</td>
+                            <td class="notes-col"><span class="badge badge-food">Питание</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">18:00-19:30</td>
+                            <td class="activity-col">Свободное время (отдых/хобби)</td>
+                            <td class="notes-col"><span class="badge badge-personal">Отдых</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">19:30-20:15</td>
+                            <td class="activity-col">Домашняя тренировка</td>
+                            <td class="notes-col"><span class="badge badge-health">Фитнес</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">20:15-21:30</td>
+                            <td class="activity-col">Фриланс (1 час) или английский</td>
+                            <td class="notes-col"><span class="badge badge-work">Фриланс</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">22:30</td>
+                            <td class="activity-col">Сон</td>
+                            <td class="notes-col"></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="day-section">
+                    <h3>🍽 Питание сегодня</h3>
+                    <p><strong>Печень + Картофель + Свекла</strong></p>
+                    <p>Примерное меню:</p>
+                    <ul>
+                        <li>Завтрак: Омлет/каша</li>
+                        <li>Обед: Печень с картофелем и свеклой</li>
+                        <li>Ужин: Творог с чаем</li>
+                    </ul>
+                </div>
+                
+                <div class="day-section">
+                    <h3>💪 Тренировка</h3>
+                    <p><strong>Ноги + Плечи</strong></p>
+                    <ol class="exercise-list">
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/prisedaniya-s-girej.html" class="exercise-link" target="_blank">Приседания с гирей</a> – 3х12</li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/vypady-s-gantelyami.html" class="exercise-link" target="_blank">Выпады с гантелями</a> – 3х10</li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/zhim-gantelej-stoya.html" class="exercise-link" target="_blank">Жим гантелей стоя</a> – 3х10</li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/mahi-gantelyami-v-storony.html" class="exercise-link" target="_blank">Махи гантелями в стороны</a> – 3х12</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <!-- Пятница -->
+            <div id="friday" class="tab-content">
+                <h2>Пятница <span class="badge badge-work">Рабочий день</span></h2>
+                
+                <div class="day-section">
+                    <h3>📅 График дня</h3>
+                    <table class="schedule">
+                        <tr>
+                            <th>Время</th>
+                            <th>Активность</th>
+                            <th>Примечания</th>
+                        </tr>
+                        <tr>
+                            <td class="time-col">05:30</td>
+                            <td class="activity-col">Подъем</td>
+                            <td class="notes-col"></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">05:40-06:00</td>
+                            <td class="activity-col">Зарядка + завтрак</td>
+                            <td class="notes-col"><span class="badge badge-health">Здоровье</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">06:09-07:10</td>
+                            <td class="activity-col">Поезд в Брест: чтение или аудиоанглийский</td>
+                            <td class="notes-col"><span class="badge badge-personal">Развитие</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">07:20-15:50</td>
+                            <td class="activity-col">Работа в институте</td>
+                            <td class="notes-col"><span class="badge badge-work">Работа</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">16:06-17:10</td>
+                            <td class="activity-col">Поезд в Кобрин: отдых/аудиокнига</td>
+                            <td class="notes-col"><span class="badge badge-personal">Отдых</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">17:30-18:30</td>
+                            <td class="activity-col">Приготовление еды на выходные</td>
+                            <td class="notes-col"><span class="badge badge-food">Питание</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">18:30-20:00</td>
+                            <td class="activity-col">Свободное время</td>
+                            <td class="notes-col"><span class="badge badge-personal">Отдых</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">20:00-21:00</td>
+                            <td class="activity-col">Фриланс или фильм</td>
+                            <td class="notes-col"><span class="badge badge-work">Фриланс</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">22:30</td>
+                            <td class="activity-col">Сон</td>
+                            <td class="notes-col"></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="day-section">
+                    <h3>🍽 Питание сегодня</h3>
+                    <p><strong>Печень + Картофель + Свекла</strong></p>
+                    <p>Примерное меню:</p>
+                    <ul>
+                        <li>Завтрак: Омлет/каша</li>
+                        <li>Обед: Печень с картофелем и свеклой</li>
+                        <li>Ужин: Творог с чаем</li>
+                    </ul>
+                </div>
+                
+                <div class="day-section">
+                    <h3>👨‍🍳 Приготовление</h3>
+                    <p><strong>Сегодня нужно приготовить:</strong> Рыба + Рис + Овощи на выходные</p>
+                    <p><a href="#recipe-fish" class="recipe-link">Рецепт рыбы с рисом и овощами</a></p>
+                    <p><strong>Список продуктов:</strong></p>
+                    <ul>
+                        <li>Минтай - 1,5 кг</li>
+                        <li>Рис - 1 кг</li>
+                        <li>Морковь - 1 кг</li>
+                        <li>Лук репчатый - 0,5 кг</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Суббота -->
+            <div id="saturday" class="tab-content">
+                <h2>Суббота <span class="badge badge-family">Выходной</span></h2>
+                
+                <div class="day-section">
+                    <h3>📅 График дня</h3>
+                    <table class="schedule">
+                        <tr>
+                            <th>Время</th>
+                            <th>Активность</th>
+                            <th>Примечания</th>
+                        </tr>
+                        <tr>
+                            <td class="time-col">08:00</td>
+                            <td class="activity-col">Подъем, завтрак</td>
+                            <td class="notes-col"><span class="badge badge-food">Питание</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">08:30</td>
+                            <td class="activity-col">Отвезти старшего на плавание (9:00)</td>
+                            <td class="notes-col"><span class="badge badge-family">Семья</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">09:30-10:30</td>
+                            <td class="activity-col">Копчение мяса (подготовка)</td>
+                            <td class="notes-col"><span class="badge badge-food">Продукты</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">10:30</td>
+                            <td class="activity-col">Забрать ребенка с плавания</td>
+                            <td class="notes-col"><span class="badge badge-family">Семья</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">11:00-12:00</td>
+                            <td class="activity-col">Время с детьми</td>
+                            <td class="notes-col"><span class="badge badge-family">Семья</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">12:00-13:00</td>
+                            <td class="activity-col">Обед</td>
+                            <td class="notes-col"><span class="badge badge-food">Питание</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">14:00-16:00</td>
+                            <td class="activity-col">Фриланс</td>
+                            <td class="notes-col"><span class="badge badge-work">Работа</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">16:00-18:00</td>
+                            <td class="activity-col">Прогулка/активности с детьми</td>
+                            <td class="notes-col"><span class="badge badge-family">Семья</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">20:00-21:00</td>
+                            <td class="activity-col">Домашняя тренировка</td>
+                            <td class="notes-col"><span class="badge badge-health">Фитнес</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">21:00-22:30</td>
+                            <td class="activity-col">Фильм/хобби</td>
+                            <td class="notes-col"><span class="badge badge-personal">Отдых</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">22:30</td>
+                            <td class="activity-col">Сон</td>
+                            <td class="notes-col"></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="day-section">
+                    <h3>🍽 Питание сегодня</h3>
+                    <p><strong>Рыба + Рис + Овощи</strong></p>
+                    <p>Примерное меню:</p>
+                    <ul>
+                        <li>Завтрак: Омлет/каша</li>
+                        <li>Обед: Рыба с рисом и тушеными овощами</li>
+                        <li>Ужин: Кефир с творогом</li>
+                    </ul>
+                </div>
+                
+                <div class="day-section">
+                    <h3>👨‍🍳 Приготовление</h3>
+                    <p><strong>Копчение мяса (подготовка)</strong></p>
+                    <p><a href="#recipe-smoking" class="recipe-link">Рецепт подготовки мяса к копчению</a></p>
+                </div>
+                
+                <div class="day-section">
+                    <h3>💪 Тренировка</h3>
+                    <p><strong>Грудь + Трицепс + Интервалы</strong></p>
+                    <ol class="exercise-list">
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/berpi.html" class="exercise-link" target="_blank">Берпи</a> – 3х10</li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/zhim-shtangi-lezha.html" class="exercise-link" target="_blank">Жим штанги лёжа</a> – 4х8</li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/otzhimaniya-s-hlopkom.html" class="exercise-link" target="_blank">Отжимания с хлопком</a> – 3х12</li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/razgibaniya-s-girej.html" class="exercise-link" target="_blank">Разгибания с гирей (трицепс)</a> – 3х10</li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/kardio/skakalka.html" class="exercise-link" target="_blank">Скакалка</a> – 5 раундов по 30 сек</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <!-- Воскресенье -->
+            <div id="sunday" class="tab-content">
+                <h2>Воскресенье <span class="badge badge-family">Выходной</span></h2>
+                
+                <div class="day-section">
+                    <h3>📅 График дня</h3>
+                    <table class="schedule">
+                        <tr>
+                            <th>Время</th>
+                            <th>Активность</th>
+                            <th>Примечания</th>
+                        </tr>
+                        <tr>
+                            <td class="time-col">08:30</td>
+                            <td class="activity-col">Подъем, завтрак</td>
+                            <td class="notes-col"><span class="badge badge-food">Питание</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">09:30</td>
+                            <td class="activity-col">Отвезти старшего на шахматы</td>
+                            <td class="notes-col"><span class="badge badge-family">Семья</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">10:00-12:00</td>
+                            <td class="activity-col">Копчение мяса (финальная стадия)</td>
+                            <td class="notes-col"><span class="badge badge-food">Продукты</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">12:30</td>
+                            <td class="activity-col">Забрать ребенка с шахмат</td>
+                            <td class="notes-col"><span class="badge badge-family">Семья</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">13:00-14:00</td>
+                            <td class="activity-col">Обед</td>
+                            <td class="notes-col"><span class="badge badge-food">Питание</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">14:00-16:00</td>
+                            <td class="activity-col">Фриланс</td>
+                            <td class="notes-col"><span class="badge badge-work">Работа</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">16:00-18:00</td>
+                            <td class="activity-col">Время с детьми</td>
+                            <td class="notes-col"><span class="badge badge-family">Семья</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">18:00-19:00</td>
+                            <td class="activity-col">Ужин</td>
+                            <td class="notes-col"><span class="badge badge-food">Питание</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">19:00-21:00</td>
+                            <td class="activity-col">Фильм/хобби</td>
+                            <td class="notes-col"><span class="badge badge-personal">Отдых</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">21:30</td>
+                            <td class="activity-col">Отвезти детей к матери</td>
+                            <td class="notes-col"><span class="badge badge-family">Семья</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-col">22:30</td>
+                            <td class="activity-col">Сон</td>
+                            <td class="notes-col"></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="day-section">
+                    <h3>🍽 Питание сегодня</h3>
+                    <p><strong>Рыба + Рис + Овощи</strong></p>
+                    <p>Примерное меню:</p>
+                    <ul>
+                        <li>Завтрак: Омлет/каша</li>
+                        <li>Обед: Рыба с рисом и тушеными овощами</li>
+                        <li>Ужин: Кефир с творогом</li>
+                    </ul>
+                </div>
+                
+                <div class="day-section">
+                    <h3>👨‍🍳 Приготовление</h3>
+                    <p><strong>Копчение мяса (финальная стадия)</strong></p>
+                    <p><a href="#recipe-smoking" class="recipe-link">Рецепт копчения мяса</a></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Питание -->
+        <div id="nutrition" class="tab-content">
+            <h2>Питание</h2>
+            
+            <div class="day-section" id="recipe-chicken">
+                <h3>🔹 Курица + Гречка + Овощи</h3>
+                <p><strong>День готовки:</strong> Понедельник</p>
+                <p><strong>Ингредиенты:</strong></p>
+                <ul>
+                    <li>Куриные окорочка - 2 кг</li>
+                    <li>Гречка - 1 кг</li>
+                    <li>Капуста белокочанная - 1 кг</li>
+                    <li>Морковь - 0,5 кг</li>
+                    <li>Лук репчатый - 0,5 кг</li>
+                    <li>Яйца - 20 шт</li>
+                    <li>Творог 5% - 0,5 кг</li>
+                    <li>Растительное масло - 0,5 л</li>
+                    <li>Чай/кофе - 1 упаковка</li>
+                </ul>
+                <p><strong>Приготовление:</strong></p>
+                <ol>
+                    <li>Курицу промыть, натереть солью и специями, запечь в духовке при 180°C 45 минут</li>
+                    <li>Гречку промыть, варить в соотношении 1:2 с водой 15-20 минут</li>
+                    <li>Овощи нарезать, потушить на растительном масле 15 минут</li>
+                    <li>Разделить на порции и хранить в холодильнике</li>
+                </ol>
+            </div>
+            
+            <div class="day-section" id="recipe-fish">
+                <h3>🔹 Рыба + Рис + Овощи</h3>
+                <p><strong>День готовки:</strong> Пятница</p>
+                <p><strong>Ингредиенты:</strong></p>
+                <ul>
+                    <li>Минтай - 1,5 кг</li>
+                    <li>Рис - 1 кг</li>
+                    <li>Морковь - 1 кг</li>
+                    <li>Лук репчатый - 0,5 кг</li>
+                    <li>Яйца - 20 шт</li>
+                    <li>Кефир - 1 л</li>
+                    <li>Растительное масло - 0,5 л</li>
+                    <li>Чай/кофе - 1 упаковка</li>
+                </ul>
+                <p><strong>Приготовление:</strong></p>
+                <ol>
+                    <li>Рыбу разделать, посолить, поперчить</li>
+                    <li>Рис промыть, варить 15 минут</li>
+                    <li>Овощи нарезать и потушить</li>
+                    <li>Рыбу запечь в духовке 25 минут при 200°C</li>
+                </ol>
+            </div>
+            
+            <div class="day-section" id="recipe-smoking">
+                <h3>🔹 Копчение мяса</h3>
+                <p><strong>День готовки:</strong> Суббота (подготовка), Воскресенье (копчение)</p>
+                <p><strong>Ингредиенты:</strong></p>
+                <ul>
+                    <li>Свиная шея - 3 кг</li>
+                    <li>Соль - 200 г</li>
+                    <li>Сахар - 50 г</li>
+                    <li>Чеснок - 1 головка</li>
+                    <li>Специи по вкусу</li>
+                    <li>Щепа для копчения</li>
+                </ul>
+                <p><strong>Приготовление:</strong></p>
+                <ol>
+                    <li><strong>Суббота:</strong> Мясо натереть смесью соли, сахара и специй, добавить чеснок, оставить мариноваться на ночь</li>
+                    <li><strong>Воскресенье:</strong> Развести огонь в коптильне, довести до температуры 80-90°C</li>
+                    <li>Поместить мясо в коптильню, коптить 4-5 часов</li>
+                    <li>Дать остыть и можно подавать или хранить в холодильнике</li>
+                </ol>
+            </div>
+        </div>
+        
+        <!-- Тренировки -->
+        <div id="workouts" class="tab-content">
+            <h2>Тренировки</h2>
+            
+            <div class="day-section">
+                <h3>📅 Программа тренировок</h3>
+                
+                <div class="day-section">
+                    <h4>День 1 (Грудь + Трицепс + Кардио)</h4>
+                    <ol>
+                        <li><a href="https://bodybuilding-and-fitness.ru/kardio/skakalka.html" target="_blank">Разминка: Скакалка – 5 мин</a></li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/otzhimaniya-na-brusyah.html" target="_blank">Отжимания на брусьях – 3х10</a></li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/zhim-gantelej-lezha.html" target="_blank">Жим гантелей лёжа – 3х12</a></li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/otzhimaniya-ot-pola.html" target="_blank">Отжимания от пола – 3х15</a></li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/francuzskij-zhim.html" target="_blank">Французский жим (гантели) – 3х10</a></li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/kardio/skakalka.html" target="_blank">Кардио: Скакалка – 3 раунда по 1 мин</a></li>
+                    </ol>
+                </div>
+                
+                <div class="day-section">
+                    <h4>День 2 (Спина + Бицепс)</h4>
+                    <ol>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/podtyagivaniya.html" target="_blank">Подтягивания на турнике – 3х8</a></li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/tyaga-ganteli-v-naklone.html" target="_blank">Тяга гантели к поясу – 3х10</a></li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/shragi.html" target="_blank">Шраги (гантели) – 3х12</a></li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/podem-gantelej-na-biceps.html" target="_blank">Подъём гантелей на бицепс – 3х10</a></li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/planka.html" target="_blank">Планка – 3 подхода по 30 сек</a></li>
+                    </ol>
+                </div>
+                
+                <div class="day-section">
+                    <h4>День 3 (Ноги + Плечи)</h4>
+                    <ol>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/prisedaniya-s-girej.html" target="_blank">Приседания с гирей – 3х12</a></li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/vypady-s-gantelyami.html" target="_blank">Выпады с гантелями – 3х10</a></li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/zhim-gantelej-stoya.html" target="_blank">Жим гантелей стоя – 3х10</a></li>
+                        <li><a href="https://bodybuilding-and-fitness.ru/uprazhneniya/mahi-gantelyami-v-storony.html" target="_blank">Махи гантелями в стороны – 3х12</a></li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="day-section">
+                <h3>🔹 Правила тренировок</h3>
+                <ul>
+                    <li><strong>Отдых:</strong> 1–2 мин между подходами</li>
+                    <li><strong>Прогресс:</strong> Каждую неделю добавляйте 1–2 повторения или вес</li>
+                    <li><strong>Для спины:</strong> После тренировки – вис на турнике 1–2 мин</li>
+                </ul>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Мой Еженедельный Планер | Обновлено: 20.05.2023</p>
+        </footer>
+    </div>
+    
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabbuttons;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabbuttons = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tabbuttons.length; i++) {
+                tabbuttons[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        function openSubTab(evt, tabName) {
+            var i, tabcontent, tabbuttons;
+            
+            tabcontent = document.querySelectorAll("#schedule .tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabbuttons = document.querySelectorAll("#schedule .tab-btn");
+            for (i = 0; i < tabbuttons.length; i++) {
+                tabbuttons[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
